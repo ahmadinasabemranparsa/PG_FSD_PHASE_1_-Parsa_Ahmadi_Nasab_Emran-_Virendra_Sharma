@@ -110,7 +110,7 @@ public class Project_Phase1 {
 		if (scanner.hasNext() == true) {
 			s = scanner.next();
 		}
-		else if (scanner.hasNextInt()) {
+		else if (scanner.hasNextInt() == true) {
 			num = scanner.nextInt();
 		}
 		
