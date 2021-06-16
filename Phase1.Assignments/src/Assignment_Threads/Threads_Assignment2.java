@@ -1,6 +1,6 @@
 package Assignment_Threads;
 
-class MyThread {
+class MyThread extends Thread {
 	public void run () {
 		for (int i = 0; i < 10; i++) {
 			try {
@@ -15,7 +15,7 @@ class MyThread {
 	}
 }
 
-class YourThread {
+class YourThread extends Thread {
 	public void run () {
 		for (int i = 0; i < 5; i++) {
 			try {
@@ -35,8 +35,8 @@ public class Threads_Assignment2 {
 		MyThread myThread = new MyThread();
 		YourThread yourThread = new YourThread();
 		
-		myThread.run();
-		yourThread.run();
+		myThread.start();
+		yourThread.start();
 
 	}
 
