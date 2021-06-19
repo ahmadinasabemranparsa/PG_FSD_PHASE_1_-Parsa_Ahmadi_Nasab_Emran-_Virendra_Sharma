@@ -9,144 +9,133 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Project_Phase1 {
-	protected String directoryPath;
-	protected File file;
-	protected String fileName;
+	
+	//file names include the directory path + name of file + extension for the file
+	//for example: users/parsatempleowl/Desktop/parsa_aboutme.txt
+	//this format will be used when adding a file, deleting a file, and searching for a file in a directory list
 	
 	public void displayMainMenu () {
-		System.out.println("1. return the current file names in the directory in ascending order");
-		System.out.println("2: return the details of the user interface: ");
-		System.out.println("A. Add a file to the existing directory list");
-		System.out.println("B. Delete a file from the existing directory list");
-		System.out.println("C. Search for a file in the existing directory name");
-		System.out.println("3. Close the application");
+		System.out.println("1. should return the current file names in the directory in ascending order");
+		System.out.println("2. should return the details of the user interface such as options displaying the following:");
+		System.out.println("A. add a file to the existing directory list");
+		System.out.println("B. delete a user specified file from the existing directory list");
+		System.out.println("C. search a user specified file from the main directory list");
+		System.out.println("3. cliose the application");
 	}
 	
-	public void displayDirectoryList (String directoryPath) throws IOException {
-		File directoryFiles = new File(directoryPath);
-		this.directoryPath = directoryPath;
-		
-		if (directoryFiles.isDirectory() == true) {
-			List listOfFilesInDirectory = Arrays.asList(directoryFiles.list());
-			Collections.sort(listOfFilesInDirectory);
-			System.out.println("Sorting by filename in ascending order: ");
-			for (int i = 0; i < listOfFilesInDirectory.size(); i++) {
-				System.out.println(listOfFilesInDirectory.get(i));
+	public void displayFileNamesInDirectory (String directoryPath) throws IOException {
+		File fileDir = new File(directoryPath);
+		if (fileDir.isDirectory() == true) {
+			List listFile = Arrays.asList(fileDir.list());
+			Collections.sort(listFile);
+			for (int i = 0; i < listFile.size(); i++) {
+				System.out.println(listFile.get(i));
 			}
 		}
 		else {
-			throw new IOException("given directory path does not exist: " + this.directoryPath);
+			throw new IOException("directory does not exist/directory was not found");
 		}
-		
 	}
 	
-	public void addFileToDirectoryList (String fileName) throws IOException {
-		this.file = new File(fileName);
-		this.fileName = fileName;
-		if (this.file.createNewFile() == true) {
-			System.out.println("new file is created");
+	public void addFileToDirectory (String fileName) throws Exception{
+		File file = new File(fileName);
+		if (file.exists() == true) {
+			throw new FileAlreadyExistsException("file already exists");
 		}
 		else {
-			System.out.println("file already exists: " + this.fileName);
+			try {
+				file.createNewFile();
+				System.out.println("file was created");
+			}
+			catch(IOException ioe) {
+				System.out.println(ioe);
+			}
 		}
 	}
 	
-	public void deleteFileFromDirectoryList (String fileName) throws FileNotFoundException {
-		this.file = new File(fileName);
-		this.fileName = fileName;
+	public void deleteFileFromDirectory (String fileName) throws FileNotFoundException {
+		File file = new File(fileName);
 		if (file.delete() == true) {
-			System.out.println("file has been deleted");
+			System.out.println("file was deleted");
 		}
 		else {
-			throw new FileNotFoundException("file was not found: " + this.fileName);
+			throw new FileNotFoundException("file was not found");
 		}
 	}
 	
-	public void searchForFileInDirecotry (String fileName, String directoryPath) throws Exception {
-		this.file = new File(fileName);
-		this.fileName = fileName;
-		List listOfFilesInDirectory = getDirectoryList(this.directoryPath);
-		if (listOfFilesInDirectory.contains(file) == true) {
-			System.out.println(file);
+	public void searchFileInDirectory (String fileName, String directoryPath) throws Exception {
+		File fileDir = new File(directoryPath);
+		File file = new File(fileName);
+		
+		if (fileDir.isDirectory() == true) {
+			List listFile = Arrays.asList(fileDir.list());
+			if (listFile.contains(file) == true) {
+				System.out.println(file);
+			}
+			else {
+				throw new FileNotFoundException("file was not found");
+			}
 		}
 		else {
-			throw new Exception("file was not found: " + this.fileName);
+			throw new IOException("directory does not exist/directory was not found");
 		}
-	}
-	
-	public List getDirectoryList(String directoryPath) throws IOException {
-		List listOfFilesInDirectory;
-		
-		File directoryFiles = new File(directoryPath);
-		this.directoryPath = directoryPath;
-		
-		if (directoryFiles.isDirectory() == true) {
-			listOfFilesInDirectory = Arrays.asList(directoryFiles.list());
-		}
-		else {
-			throw new IOException("given directory path does not exist: " + this.directoryPath);
-		}
-		
-		return listOfFilesInDirectory;
 	}
 	
 	public void closeTheApplication () {
+		System.out.println("Application is now exiting...");
+		System.out.println("Application has now exited...");
 		System.exit(0);
+	} 
+	
+class FileAlreadyExistsException extends Exception {
+	FileAlreadyExistsException (String s) {
+		super(s);
 	}
-	
-	
+}
 
 	public static void main(String[] args) throws Exception {
 		Project_Phase1 obj = new Project_Phase1();
 		
-		int num = 1; String s = "A";
-		
 		Scanner scanner = new Scanner(System.in);
 		
-		obj.displayMainMenu();
+		boolean flag = true;
 		
-		System.out.println("Please select an option from the list below: ");
+		while (flag == true) {
 		
-		if (scanner.hasNext() == true) {
-			s = scanner.next();
+			obj.displayMainMenu();
+			
+			System.out.println("Please select an option from the list above: ");
+			String selectedOption = scanner.next();
+			
+			switch(selectedOption) {
+			case "1":
+				System.out.println("Please enter a directory path: ");
+				String directoryPath = scanner.next();
+				obj.displayFileNamesInDirectory(directoryPath);
+				break;
+			case "A":
+				System.out.println("Please enter a filename: ");
+				String fileName1 = scanner.next();
+				obj.addFileToDirectory(fileName1);
+				break;
+			case "B":
+				System.out.println("Please enter a filename: ");
+				String fileName2 = scanner.next();
+				obj.deleteFileFromDirectory(fileName2);
+				break;
+			case "C":
+				System.out.println("Please enter a directory path: ");
+				String directoryPath1 = scanner.next();
+				System.out.println("Please enter a filename: ");
+				String fileName3 = scanner.next();
+				obj.searchFileInDirectory(fileName3, directoryPath1);
+				break;
+			case "3":
+				flag = false;
+				obj.closeTheApplication();
+				break;
+			}
 		}
-		else if (scanner.hasNextInt() == true) {
-			num = scanner.nextInt();
-		}
-		
-		System.out.println("Please enter a directory path: ");
-		String directoryPath = scanner.next();
-		
-		System.out.println("Please enter a filename you would like to add to the directory: ");
-		String fileName1 = scanner.next();
-		
-		System.out.println("Please enter a filename you would like to delete from the directory: ");
-		String fileName2 = scanner.next();
-		
-		System.out.println("Please enter a filename you would like to search for in the directory: ");
-		String fileName3 = scanner.next();
-		
-		switch (num) {
-		case 1:
-			obj.displayDirectoryList(directoryPath);
-			break;
-		case 3:
-			obj.closeTheApplication();
-			break;
-		}
-		
-		switch(s) {
-		case "A":
-			obj.addFileToDirectoryList(fileName1);
-			break;
-		case "B":
-			obj.deleteFileFromDirectoryList(fileName2);
-			break;
-		case "C":
-			obj.searchForFileInDirecotry(fileName3, directoryPath);
-			break;
-		}
-		
 	}
 
 }
