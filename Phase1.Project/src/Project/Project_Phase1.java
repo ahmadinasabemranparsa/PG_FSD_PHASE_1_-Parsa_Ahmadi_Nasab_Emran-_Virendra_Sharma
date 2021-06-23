@@ -9,16 +9,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Project_Phase1 {
-	public static void displayMainMenu () {
-		System.out.println("1. Should return the current file names in ascending order");
-		System.out.println("2. Should return the details of the user interface such as options displaying the following: ");
-		System.out.println("A. Add a file to the existing directory list");
-		System.out.println("B. Delete a user specified file from the existing directory list");
-		System.out.println("C. Search a user specified file in the main directory");
-		System.out.println("3. Close the application");
+	
+	//file names include the directory path + name of file + extension for the file
+	//for example: users/parsatempleowl/Desktop/parsa_aboutme.txt
+	//this format will be used when adding a file, deleting a file, and searching for a file in a directory list
+	
+	public void displayMainMenu () {
+		System.out.println("1. should return the current file names in the directory in ascending order");
+		System.out.println("2. should return the details of the user interface such as options displaying the following:");
+		System.out.println("A. add a file to the existing directory list");
+		System.out.println("B. delete a user specified file from the existing directory list");
+		System.out.println("C. search a user specified file from the main directory list");
+		System.out.println("3. cliose the application");
 	}
-	public static void displayFileNamesInDirectory (String directorypPath) throws IOException {
-		File fileDir = new File(directorypPath);
+	
+	public void displayFileNamesInDirectory (String directoryPath) throws IOException {
+		File fileDir = new File(directoryPath);
 		if (fileDir.isDirectory() == true) {
 			List listFile = Arrays.asList(fileDir.list());
 			Collections.sort(listFile);
@@ -27,30 +33,28 @@ public class Project_Phase1 {
 			}
 		}
 		else {
-			throw new IOException("directory does not exist");
+			throw new IOException("directory does not exist/directory was not found");
 		}
 	}
-	public void addFileToDirectory (String fileName, String directoryPath) throws FileAlreadyExistsException  {
-		File file = new File(directoryPath + fileName);
+	
+	public void addFileToDirectory (String fileName) throws Exception{
+		File file = new File(fileName);
 		if (file.exists() == true) {
 			throw new FileAlreadyExistsException("file already exists");
 		}
 		else {
 			try {
 				file.createNewFile();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+				System.out.println("file was created");
 			}
-			System.out.println("file was created");
+			catch(IOException ioe) {
+				System.out.println(ioe);
+			}
 		}
 	}
-	public class FileAlreadyExistsException extends Exception {
-		FileAlreadyExistsException (String s) {
-			super(s);
-		}
-	}
-	public static void deleteFileFromDirectory (String fileName, String directoryPath) throws FileNotFoundException {
-		File file = new File(directoryPath + fileName);
+	
+	public void deleteFileFromDirectory (String fileName) throws FileNotFoundException {
+		File file = new File(fileName);
 		if (file.delete() == true) {
 			System.out.println("file was deleted");
 		}
@@ -58,53 +62,80 @@ public class Project_Phase1 {
 			throw new FileNotFoundException("file was not found");
 		}
 	}
-	public static void searchFileInDirectory (String fileName, String directoryPath) throws FileNotFoundException {
+	
+	public void searchFileInDirectory (String fileName, String directoryPath) throws Exception {
 		File fileDir = new File(directoryPath);
+		File file = new File(fileName);
+		
 		if (fileDir.isDirectory() == true) {
 			List listFile = Arrays.asList(fileDir.list());
-			if (listFile.contains(fileName)) {
-				System.out.println("file was found");
+			if (listFile.contains(file) == true) {
+				System.out.println(file);
 			}
 			else {
 				throw new FileNotFoundException("file was not found");
 			}
 		}
+		else {
+			throw new IOException("directory does not exist/directory was not found");
+		}
 	}
-	public static void main (String[] args) throws Exception {
+	
+	public void closeTheApplication () {
+		System.out.println("Application is now exiting...");
+		System.out.println("Application has now exited...");
+		System.exit(0);
+	} 
+	
+class FileAlreadyExistsException extends Exception {
+	FileAlreadyExistsException (String s) {
+		super(s);
+	}
+}
+
+	public static void main(String[] args) throws Exception {
 		Project_Phase1 obj = new Project_Phase1();
+		
 		Scanner scanner = new Scanner(System.in);
-		String directoryPath, fileName, selectedOption;
-		char input;
-		System.out.println("Please enter a directory path: ");
-		directoryPath = scanner.next();
-		do {
-			displayMainMenu();
+		
+		boolean flag = true;
+		
+		while (flag == true) {
+		
+			obj.displayMainMenu();
+			
 			System.out.println("Please select an option from the list above: ");
-			selectedOption = scanner.next();
+			String selectedOption = scanner.next();
+			
 			switch(selectedOption) {
 			case "1":
-				displayFileNamesInDirectory(directoryPath);
+				System.out.println("Please enter a directory path: ");
+				String directoryPath = scanner.next();
+				obj.displayFileNamesInDirectory(directoryPath);
 				break;
 			case "A":
 				System.out.println("Please enter a filename: ");
-				fileName = scanner.next();
-				obj.addFileToDirectory(fileName, directoryPath);
+				String fileName1 = scanner.next();
+				obj.addFileToDirectory(fileName1);
 				break;
 			case "B":
 				System.out.println("Please enter a filename: ");
-				fileName = scanner.next();
-				deleteFileFromDirectory(fileName, directoryPath);
+				String fileName2 = scanner.next();
+				obj.deleteFileFromDirectory(fileName2);
 				break;
 			case "C":
+				System.out.println("Please enter a directory path: ");
+				String directoryPath1 = scanner.next();
 				System.out.println("Please enter a filename: ");
-				fileName = scanner.next();
-				searchFileInDirectory(fileName, directoryPath);
+				String fileName3 = scanner.next();
+				obj.searchFileInDirectory(fileName3, directoryPath1);
 				break;
 			case "3":
-				System.exit(0);
+				flag = false;
+				obj.closeTheApplication();
+				break;
 			}
-			System.out.println("Do you want to continue (y/n)? ");
-			input = scanner.next().charAt(0);
-		} while (input == 'Y' || input == 'y');
+		}
 	}
+
 }
