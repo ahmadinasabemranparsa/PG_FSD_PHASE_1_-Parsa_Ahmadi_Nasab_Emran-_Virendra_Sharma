@@ -11,3 +11,16 @@ PG FSD Implement OOPS using JAVA with Data Structures and Beyond
   * Option B: Delete a user specified file from the existing directory list
   * Option C: Search a user specified file in the main directory
 * Option 3: Close the application
+# Phase 1 - Assignments
+* Assignment - Abstract
+* Assignment - Access Modifiers
+* Assignment - Aggregation
+* Assignment - CircularLinkedList
+* Assignment - Composition
+* Assignment - Custom Exception
+* Assignment - Exception
+* Assignment - LinkedList
+* Assignment - Runtime Polymorphism
+* Assignment - Stack
+* Assignment - Strings
+* Assignment - Threads
