@@ -75,6 +75,8 @@ public class Project_Phase1 {
 		Scanner scanner = new Scanner(System.in);
 		String directoryPath, fileName, selectedOption;
 		char input;
+		System.out.println("Parsa Ahmadi Nasab Emran, parsaahmadinasabemran18@gmail.com");
+		System.out.println("Application lists content of a Directory and Adds, Deletes, or Searches for a file");
 		System.out.println("Please enter a directory path: ");
 		directoryPath = scanner.next();
 		do {
