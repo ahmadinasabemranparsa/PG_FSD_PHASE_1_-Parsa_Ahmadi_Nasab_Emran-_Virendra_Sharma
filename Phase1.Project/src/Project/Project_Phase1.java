@@ -32,16 +32,17 @@ public class Project_Phase1 {
 	}
 	public void addFileToDirectory (String fileName, String directoryPath) throws FileAlreadyExistsException  {
 		File file = new File(directoryPath + fileName);
-		if (file.exists() == true) {
+		boolean fileAlreadyExists = file.exists();
+		if (fileAlreadyExists) {
 			throw new FileAlreadyExistsException("file already exists");
 		}
 		else {
 			try {
 				file.createNewFile();
+				System.out.println("file was created");
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
-			System.out.println("file was created");
 		}
 	}
 	public class FileAlreadyExistsException extends Exception {
@@ -51,7 +52,8 @@ public class Project_Phase1 {
 	}
 	public static void deleteFileFromDirectory (String fileName, String directoryPath) throws FileNotFoundException {
 		File file = new File(directoryPath + fileName);
-		if (file.delete() == true) {
+		boolean fileWasDeleted = file.delete();
+		if (fileWasDeleted) {
 			System.out.println("file was deleted");
 		}
 		else {
